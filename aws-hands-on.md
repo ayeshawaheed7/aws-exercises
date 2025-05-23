@@ -119,3 +119,29 @@ aws iam list-attached-user-policies --user-name ayesha
 ---
 
 </details>
+
+<details>
+<summary>Configure AWS CLI Credentials</summary>
+<br />
+
+**Objective:**
+Set up your AWS CLI with Access Key, Secret Key, default region, and output format.
+
+```sh
+# Run AWS CLI configuration wizard
+aws configure
+
+# Example input prompts:
+# AWS Access Key ID [****************]: new-access-key-id
+# AWS Secret Access Key [****************]: new-secret-access-key
+# Default region name [*******]: new-region
+# Default output format [json]: json
+```
+
+**Notes:**
+
+* Keep your Access Key and Secret Access Key confidential.
+* Choose the AWS region closest to your deployment.
+* `json` is the recommended default output format for easier parsing and automation.
+
+</details>

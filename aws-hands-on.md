@@ -145,3 +145,159 @@ aws configure
 * `json` is the recommended default output format for easier parsing and automation.
 
 </details>
+
+<details>
+<summary>Setup VPC, Subnet, Internet Gateway, Route Table, and Security Group using AWS CLI</summary>
+<br />
+
+Why use `10.0.0.0/24` for your VPC?
+
+* CIDR block defines the IP address range for your VPC (Virtual Private Cloud).
+* `10.0.0.0/24` means the network includes IPs from 10.0.0.0 to 10.0.0.255 (256 addresses).
+* The /24 is the subnet mask, specifying how many IPs you get (here, 256).
+* This range is part of the private IP address space (RFC 1918), so it’s not routable on the public internet — ideal for internal networking in AWS.
+* Choosing 10.0.0.0/24 gives you a small private network to launch EC2 instances and other resources without conflicting with public IPs.
+
+To list your VPCs with their CIDR blocks:
+```sh
+aws ec2 describe-vpcs --query "Vpcs[].{VpcId:VpcId, CIDR:CidrBlock}" --output table
+```
+
+### Step 1: Create a VPC
+
+Create a new VPC with the CIDR block `10.0.0.0/24` and get the VPC ID.
+
+```sh
+aws ec2 create-vpc \
+  --cidr-block 10.0.0.0/24 \
+  --query Vpc.VpcId \
+  --output text
+```
+
+### Step 2: List all VPCs
+
+Check existing VPCs to verify your new VPC.
+
+```sh
+aws ec2 describe-vpcs
+```
+
+### Step 3: Create a Subnet
+
+Create a subnet in your VPC in the availability zone `ap-northeast-1a`.
+
+```sh
+aws ec2 create-subnet \
+  --vpc-id <your-vpc-id> \
+  --cidr-block 10.0.0.0/24 \
+  --availability-zone ap-northeast-1a \
+  --query Subnet.SubnetId \
+  --output text
+```
+
+### Step 4: List Subnets in your VPC
+
+Verify the subnet created under your VPC.
+
+```sh
+aws ec2 describe-subnets --filters "Name=vpc-id,Values=<your-vpc-id>"
+```
+
+### Step 5: Create an Internet Gateway
+
+Create an internet gateway and get its ID.
+
+```sh
+aws ec2 create-internet-gateway \
+  --query InternetGateway.InternetGatewayId \
+  --output text
+```
+
+### Step 6: Attach Internet Gateway to VPC
+
+```sh
+aws ec2 attach-internet-gateway \
+  --vpc-id <your-vpc-id> \
+  --internet-gateway-id <your-internet-gateway-id>
+```
+
+### Step 7: Create a Route Table
+
+Create a route table for your VPC.
+
+```sh
+aws ec2 create-route-table \
+  --vpc-id <your-vpc-id> \
+  --query RouteTable.RouteTableId \
+  --output text
+```
+
+### Step 8: Create a Route to the Internet Gateway
+
+Add a default route for all traffic to the internet gateway.
+
+```sh
+aws ec2 create-route \
+  --route-table-id <your-route-table-id> \
+  --destination-cidr-block 0.0.0.0/0 \
+  --gateway-id <your-internet-gateway-id>
+```
+
+### Step 9: Associate Route Table with Subnet
+
+Associate the route table with your subnet.
+
+```sh
+aws ec2 associate-route-table \
+  --route-table-id <your-route-table-id> \
+  --subnet-id <your-subnet-id>
+```
+
+### Step 10: Create a Security Group
+
+Create a security group within your VPC.
+
+```sh
+aws ec2 create-security-group \
+  --group-name nodejs-app-sg \
+  --description "Nodejs App Security group" \
+  --vpc-id <your-vpc-id>
+```
+
+### Step 11: Authorize SSH Access
+
+Allow inbound SSH (TCP port 22) only from your IP address.
+
+```sh
+aws ec2 authorize-security-group-ingress \
+  --group-id <your-security-group-id> \
+  --protocol tcp \
+  --port 22 \
+  --cidr 139.135.33.37/32
+```
+---
+
+**Notes:**
+
+* Replace placeholders like `<your-vpc-id>` with actual IDs from previous command outputs.
+* Use your real IP address in the `authorize-security-group-ingress` command.
+* Keep your AWS CLI configured with `aws configure` before running these commands.
+
+---
+
+### Check Available Availability Zones
+
+List availability zones for your region.
+
+```sh
+aws ec2 describe-availability-zones \
+  --region ap-northeast-1 \
+  --query "AvailabilityZones[].ZoneName" \
+  --output text
+```
+
+</details>
+
+
+
+

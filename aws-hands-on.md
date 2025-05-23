@@ -299,7 +299,7 @@ aws ec2 describe-availability-zones \
 </details>
 
 <details>
-<summary>Launch EC2 Instance with Public IP</summary>
+<summary>Launch EC2 Instance</summary>
 <br />
 
 **Objective:**  
@@ -337,5 +337,34 @@ aws ec2 describe-instances \
 * Replace the `instance-id` with the correct ID after instance launch.
 
 </details>
+
+<details>
+  <summary>SSH into the server and install Docker</summary>
+
+```bash
+# Get the public IP address of your EC2 instance
+aws ec2 describe-instances --query "Reservations[].Instances[].PublicIpAddress" --output text
+
+# Connect to your EC2 instance
+ssh -i ~/.ssh/NodeJsAppKey.pem ec2-user@54.168.49.98
+
+# Update packages
+sudo yum update -y
+
+# Install Docker
+sudo yum install docker -y
+
+# Start Docker daemon
+sudo systemctl start docker
+
+# Switch to root user
+sudo -i
+
+# Add ec2-user to docker group to run docker without sudo
+usermod -aG docker ec2-user
+````
+
+</details>
+
 
 

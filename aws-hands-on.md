@@ -298,6 +298,44 @@ aws ec2 describe-availability-zones \
 
 </details>
 
+<details>
+<summary>Launch EC2 Instance with Public IP</summary>
+<br />
 
+**Objective:**  
+Create a key pair, launch an EC2 instance with public IP, and check instance status.
+
+```sh
+# 1. Create a key pair and save it to a PEM file
+aws ec2 create-key-pair \
+  --key-name NodeJsAppKey \
+  --query 'KeyMaterial' \
+  --output text > NodeJsAppKey.pem
+
+# 2. Set correct permissions on the PEM file
+chmod 400 NodeJsAppKey.pem
+
+# 3. Run EC2 instance with public IP
+aws ec2 run-instances \
+  --image-id ami-0c1638aa3xxxxxx \
+  --count 1 \
+  --instance-type t2.micro \
+  --subnet-id subnet-001fc0b77xxxxxx \
+  --key-name NodeJsAppKey \
+  --security-group-ids sg-083bcd7axxxxxx \
+  --associate-public-ip-address
+
+# 4. Check instance state and public IP
+aws ec2 describe-instances \
+  --instance-id i-0a78744f9xxxxxxx \
+  --query "Reservations[*].Instances[*].{State:State.Name,Address:PublicIpAddress}"
+````
+
+**Notes:**
+
+* Ensure `DNS hostnames` are enabled in your VPC to get a public DNS.
+* Replace the `instance-id` with the correct ID after instance launch.
+
+</details>
 
 

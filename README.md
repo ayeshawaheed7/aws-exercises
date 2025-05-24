@@ -58,7 +58,7 @@ Used on the EC2 server to run the correct dockerized version of the app. It:
 2. Sources Docker credentials from a secure `.env` file  
 3. Executes `docker-compose` to launch the app container
 
-`shell-cmds.sh` is securely copied and executed by Jenkins using SSH agent and credentials.
+`shell-cmds.sh` is securely copied to the EC2 instance by Jenkins and then executed on the server via SSH, using Jenkins' SSH agent and credentials.
 
 ### Docker Compose Installation & Credential Setup
 

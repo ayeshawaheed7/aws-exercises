@@ -25,7 +25,7 @@ Step-by-step CLI instructions to:
 * Define security groups with SSH (port 22) and HTTP (port 3000) access
 * Launch an EC2 instance
 
-➡️ **See: [`aws-hand-on.md`](./aws-hand-on.md)** for the full CLI setup instructions.
+**See: [`aws-hands-on.md`](./aws-hands-on.md)** for the full CLI setup instructions.
 
 ---
 

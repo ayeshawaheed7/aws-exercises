@@ -51,7 +51,7 @@ The `Jenkinsfile` automates the following:
   * SSH into EC2 and deploys the latest image with `docker-compose`
   * Commits updated version back to GitHub
 
-🔧 **Deployment Script (`shell-cmds.sh`)**  
+**Deployment Script (`shell-cmds.sh`)**  
 Used on the EC2 server to run the correct dockerized version of the app. It:
 
 1. Exports the Docker image name passed from Jenkins  

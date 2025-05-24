@@ -4,7 +4,7 @@ pipeline {
 
     agent any 
 
-    tool {
+    tools {
         nodejs 'node'
     }
 
@@ -54,7 +54,7 @@ pipeline {
                     sshagent(['ec2-server-nodejs-app-key']) {
                        sh 'scp shell-cmds.sh ec2-user@54.168.49.98:/home/ec2-user'
                        sh 'scp docker-compose.yaml ec2-user@54.168.49.98:/home/ec2-user'
-                       sh "ssh -o StrictHostKeyChecking=no ec2-user@54.168.49.98"
+                       sh "ssh -o StrictHostKeyChecking=no ec2-user@54.168.49.98 ${shellCmds}"
                     }
                 }
             }
@@ -64,12 +64,12 @@ pipeline {
                 script {
                     echo 'committing the updated app version...'
                     withCredentials([
-                       usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'USER', usernamePassword: 'PASS')
+                       usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')
                     ]){
-                        sh "git remote set-url orgin https://${USER}:${PASS}@github.com/ayeshawaheed7/aws-exercises.git"
+                        sh "git remote set-url origin https://${USER}:${PASS}@github.com/ayeshawaheed7/aws-exercises.git"
                         sh 'git add .'
                         sh 'git commit -m "ci: bump version"'
-                        sh 'git push origin HEAD@main'
+                        sh 'git push origin HEAD:main'
                     }
                 }
             }

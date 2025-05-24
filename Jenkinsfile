@@ -84,7 +84,7 @@ pipeline {
             }
             steps {
                 script {
-                    echo 'committing the updated app version...'
+                    echo 'committing the updated app version. Yayy...'
                     withCredentials([
                        usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')
                     ]){

@@ -92,19 +92,19 @@ After pushing to `main`:
 
 ## Best Practices Followed
 
-- ✅ **Infrastructure as Code** using AWS CLI, Docker, and Jenkinsfile  
-- ✅ **CI/CD Automation** via Jenkins multibranch pipeline and GitHub webhooks  
-- ✅ **Containerization** with Docker & multi-stage builds for efficient deployment  
-- ✅ **Environment Agnostic Deployments** using `docker-compose` and dynamic `IMAGE` naming  
-- ✅ **Minimal Manual Intervention** – single push to `main` handles build, versioning, and deploy  
-- ✅ **Security-Aware** – EC2 exposed only on required ports with `.env` secrets management  
+- **Infrastructure as Code** using AWS CLI, Docker, and Jenkinsfile  
+- **CI/CD Automation** via Jenkins multibranch pipeline and GitHub webhooks  
+- **Containerization** with Docker & multi-stage builds for efficient deployment  
+- **Environment Agnostic Deployments** using `docker-compose` and dynamic `IMAGE` naming  
+- **Minimal Manual Intervention** – single push to `main` handles build, versioning, and deploy  
+- **Security-Aware** – EC2 exposed only on required ports with `.env` secrets management  
 
 ---
 
 ## Summary
 
-✅ Automated and production-ready workflow  
-✅ CI/CD best practices (versioning, testing, branching)  
-✅ Infrastructure scripting with AWS CLI  
-✅ Docker-based deployment for simplicity and scalability  
+* Automated and production-ready workflow  
+* CI/CD best practices (versioning, testing, branching)  
+* Infrastructure scripting with AWS CLI  
+* Docker-based deployment for simplicity and scalability  
 

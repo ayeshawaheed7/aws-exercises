@@ -54,8 +54,8 @@ pipeline {
                     echo 'deploying app on EC2 server...'
                     def shellCmds = "bash ./shell-cmds.sh ayeshawaheed12/demo-app:njs-${IMAGE_VERSION}"
                     sshagent(['ec2-server-nodejs-app-key']) {
-                       sh 'scp shell-cmds.sh ec2-user@54.168.49.98:/home/ec2-user'
-                       sh 'scp docker-compose.yaml ec2-user@54.168.49.98:/home/ec2-user'
+                       sh 'scp -o StrictHostKeyChecking=no shell-cmds.sh ec2-user@54.168.49.98:/home/ec2-user'
+                       sh 'scp -o StrictHostKeyChecking=no docker-compose.yaml ec2-user@54.168.49.98:/home/ec2-user'
                        sh "ssh -o StrictHostKeyChecking=no ec2-user@54.168.49.98 ${shellCmds}"
                     }
                 }
@@ -68,6 +68,9 @@ pipeline {
                     withCredentials([
                        usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')
                     ]){
+                        sh 'git config user.email "jenkins@example.com"'
+                        sh 'git config user.name "jenkins"'
+                        
                         sh "git remote set-url origin https://${USER}:${PASS}@github.com/ayeshawaheed7/aws-exercises.git"
                         sh 'git add .'
                         sh 'git commit -m "ci: bump version"'

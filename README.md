@@ -51,7 +51,7 @@ The `Jenkinsfile` automates the following:
   * SSH into EC2 and deploys the latest image with `docker-compose`
   * Commits updated version back to GitHub
 
-**Deployment Script (`shell-cmds.sh`)**  
+### Deployment Script (`shell-cmds.sh`)
 Used on the EC2 server to run the correct dockerized version of the app. It:
 
 1. Exports the Docker image name passed from Jenkins  
@@ -59,6 +59,35 @@ Used on the EC2 server to run the correct dockerized version of the app. It:
 3. Executes `docker-compose` to launch the app container
 
 `shell-cmds.sh` is securely copied and executed by Jenkins using SSH agent and credentials.
+
+### Docker Compose Installation & Credential Setup
+
+To enable Docker-based deployment on the EC2 instance, we:
+
+1. **Installed Docker Compose manually**
+   EC2 AMI (Amazon Linux) doesn't come with Docker Compose preinstalled, so we use the following command to install the latest version:
+
+   ```bash
+   sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+   sudo chmod +x /usr/local/bin/docker-compose
+   docker-compose version
+   ```
+
+2. **Configured secure Docker Hub credentials**
+   We create a file named `.docker-creds.env` on the EC2 server to store Docker Hub credentials (e.g., `DOCKER_USERNAME`, `DOCKER_PASSWORD`). This file is:
+
+   * **Restricted with `chmod 600`** to prevent unauthorized access
+   * **Sourced** before running `docker login` or `docker-compose` to ensure private image access during deployment
+
+   ```bash
+   /home/ec2-user/.docker-creds.env  # contains export DOCKER_USERNAME=... and DOCKER_PASSWORD=...
+   chmod 600 ~/.docker-creds.env
+   source ~/.docker-creds.env
+   ```
+
+   This keeps secrets out of code and ensures smooth authentication when pulling images from Docker Hub.
+
+---
 
 📁 **Referenced Files** (already included in this repo):
 

@@ -10,6 +10,11 @@ pipeline {
 
     stages {
         stage ('increment version') {
+            when {
+                expression {
+                    BRANCH_NAME == 'main'
+                }
+            }
             steps {
                 script {
                     echo 'incrementing the app version...'
@@ -35,6 +40,11 @@ pipeline {
             }
         }
         stage ('build and push docker image') {
+            when {
+                expression {
+                    BRANCH_NAME == 'main'
+                }
+            }
             steps {
                 script {
                     echo 'building and push docker image...'
@@ -49,6 +59,11 @@ pipeline {
             }
         }
         stage ('deploy on EC2 server') {
+            when {
+                expression {
+                    BRANCH_NAME == 'main'
+                }
+            }
             steps {
                 script {
                     echo 'deploying app on EC2 server...'
@@ -62,14 +77,19 @@ pipeline {
             }
         }
         stage ('commit updated version') {
+            when {
+                expression {
+                    BRANCH_NAME == 'main'
+                }
+            }
             steps {
                 script {
                     echo 'committing the updated app version...'
                     withCredentials([
                        usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')
                     ]){
-                        sh 'git config user.email "jenkins@example.com"'
-                        sh 'git config user.name "jenkins"'
+                        // sh 'git config user.email "jenkins@example.com"'
+                        // sh 'git config user.name "jenkins"'
                         
                         sh "git remote set-url origin https://${USER}:${PASS}@github.com/ayeshawaheed7/aws-exercises.git"
                         sh 'git add .'

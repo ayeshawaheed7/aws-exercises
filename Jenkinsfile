@@ -16,7 +16,7 @@ pipeline {
                     dir('app') {
                         sh 'npm version patch --no-git-tag-version'
 
-                        def packageJson = readJson 'package.json'
+                        def packageJson = readJSON file: 'package.json'
                         def version = packageJson.version
                         env.IMAGE_VERSION = "$version-$BUILD_NUMBER"
                     }
@@ -26,7 +26,7 @@ pipeline {
         stage ('run tests') {
             steps {
                 script {
-                    echo 'running the test cases'
+                    echo 'running the test cases...'
                     dir('app') {
                         sh 'npm install'
                         sh 'npm run test'
@@ -39,10 +39,10 @@ pipeline {
                 script {
                     echo 'building and push docker image...'
                     withCredentials([
-                       usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')
+                       usernamePassword(credentialsId: 'docker-hub-repo', usernameVariable: 'USER', passwordVariable: 'PASS')
                     ]){
                         sh "docker build -t ayeshawaheed12/demo-app:njs-${IMAGE_VERSION} ."
-                        sh "echo ${PASS} | docker login -u ${USER} -p --password-stdin"
+                        sh "echo ${PASS} | docker login -u ${USER} --password-stdin"
                         sh "docker push ayeshawaheed12/demo-app:njs-${IMAGE_VERSION}"
                     }
                 }

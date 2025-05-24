@@ -366,5 +366,24 @@ usermod -aG docker ec2-user
 
 </details>
 
+</details>
+
+<details>
+  <summary>Open application's port 3000 in security group to make app accessible from browser</summary>
+
+```bash
+# Use the describe-security-groups command to get your Security Group ID.
+aws ec2 describe-security-groups --filters 'Name=group-name,Values=nodejs-app-sg' --query "SecurityGroups[].GroupId" --output text
+
+# Open application's port 3000
+aws ec2 authorize-security-group-ingress \
+  --group-id <your-sg-id> \
+  --protocol tcp \
+  --port 3000 \
+  --cidr 0.0.0.0/0
+````
+
+</details>
+
 
 

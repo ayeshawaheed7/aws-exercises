@@ -13,11 +13,13 @@ pipeline {
             steps {
                 script {
                     echo 'incrementing the app version...'
-                    sh 'npm version patch --no-git-tag-version'
+                    dir('app') {
+                        sh 'npm version patch --no-git-tag-version'
 
-                    def packageJson = readJson 'package.json'
-                    def version = packageJson.version
-                    env.IMAGE_VERSION = "$version-$BUILD_NUMBER"
+                        def packageJson = readJson 'package.json'
+                        def version = packageJson.version
+                        env.IMAGE_VERSION = "$version-$BUILD_NUMBER"
+                    }
                 }
             }
         }
@@ -39,9 +41,9 @@ pipeline {
                     withCredentials([
                        usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')
                     ]){
-                        sh "docker build -t nodejs-app:${IMAGE_VERSION} ."
+                        sh "docker build -t ayeshawaheed12/demo-app:njs-${IMAGE_VERSION} ."
                         sh "echo ${PASS} | docker login -u ${USER} -p --password-stdin"
-                        sh "docker push nodejs-app:${IMAGE_VERSION}"
+                        sh "docker push ayeshawaheed12/demo-app:njs-${IMAGE_VERSION}"
                     }
                 }
             }
@@ -50,7 +52,7 @@ pipeline {
             steps {
                 script {
                     echo 'deploying app on EC2 server...'
-                    def shellCmds = "bash ./shell-cmds.sh nodejs-app:${IMAGE_VERSION}"
+                    def shellCmds = "bash ./shell-cmds.sh ayeshawaheed12/demo-app:njs-${IMAGE_VERSION}"
                     sshagent(['ec2-server-nodejs-app-key']) {
                        sh 'scp shell-cmds.sh ec2-user@54.168.49.98:/home/ec2-user'
                        sh 'scp docker-compose.yaml ec2-user@54.168.49.98:/home/ec2-user'

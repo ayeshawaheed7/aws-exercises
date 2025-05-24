@@ -3,5 +3,5 @@ services:
    nodejs-app:
       image: ${IMAGE}
       ports:
-        -3000:3000
+        - "3000:3000"
       container_name: nodejs-app

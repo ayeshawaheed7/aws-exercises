@@ -1,4 +1,4 @@
-#!/usr/bin/env groovy
+#!/bin/bash
 
 export IMAGE=$1
 source ~/.docker-creds.env

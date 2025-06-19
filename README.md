@@ -89,7 +89,7 @@ To enable Docker-based deployment on the EC2 instance, we:
 
 ---
 
-📁 **Referenced Files** (already included in this repo):
+**Referenced Files** (already included in this repo):
 
 * `Jenkinsfile`
 * `Dockerfile` (multi-stage for build + runtime)
